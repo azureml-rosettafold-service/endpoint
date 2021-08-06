@@ -1,0 +1,27 @@
+$schema: https://azuremlschemas.azureedge.net/latest/batchEndpoint.schema.json
+name: rosettafold
+description: rosetta batch endpoint
+type: batch
+auth_mode: aad_token
+traffic:
+  deployment: 100
+
+deployments:
+  - name: deployment
+    model:
+      name: placeholdermodel
+      version: 1
+      local_path: ./model_placeholder.txt
+    code_configuration:
+      code:
+        local_path: .
+      scoring_script: score.py
+    compute:
+      target: azureml:gpu-cluster
+      instance_count: 1
+    environment:
+      name: rosetta-local
+      version: 1
+      docker:
+        build:
+          dockerfile: file:./dockerfile
