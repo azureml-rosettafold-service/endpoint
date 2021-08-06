@@ -1,12 +1,109 @@
-We provide concrete example of an input/output pair by way of example.
+# RosettaFold Batch Endpoint on Azure ML
+
+## Introduction
+
+Azure is collaborating with the Baker Lab to expose their Rosetta Fold model as a service. This document describes how to get started exploring Rosetta Fold on Azure Machine Learning (Azure ML) by exposing the model as a batch endpoint. This endpoint provides a way to securely run parallel inferencing jobs against Rosetta Fold via the CLI.
+
+**Note.** This Rosetta Fold endpoint is not designed to run in production environments, and is strictly for non-production test environments.
+
+
+## Setup
+
+This repo contains the following key files:
+
+- `create-endpoint.yml`: Configuration file to create the Azure ML batch inferencing endpoint
+- `score.py`: Script running the inferencing code behind the endpoint.
+- `dockerfile`: Configuration file for the environment than runs on the AmlCompute (VM).
+
+To setup the RosettaFold endpoint run the following:
+
+1. Install the Azure ML CLI ([instructions](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli))
+  - Test installation with `az --version`
+2. The endpoint assumes there is a compute target called `gpu-cluster` assocaited to your Azure ML workspace. This can be created with the CLI:
+
+```bash
+az ml compute create --name gpu-cluster --type AMLCompute --size Standard_NC12 --min-instances 0 --max-instances 10
+```
+3. Create the endpoint
+
+```
+az ml endpoint create --type batch --file create-batch-endpoint.yml
+```
+
+## Usage
+
+The endpoint is designed to process input files containing protein sequences of the form:
+
+```
+>T1078 Tsp1, Trichoderma virens, 138 residues|
+MAAPTPADKSMMAAVPEWTITNLKRVCNAGNTSCTWTFGVDTHLATATSCTYVVKANANASQASGGPVTCGPYTITSSWSGQFGPNNGFTTFAVTDFSKKLIVWPAYTDVQVQAGKVVSPNQSYAPANLPLEHHHHHH
+```
+
+**Note.** Each input should be provided in its own input file. The input file name will be used to identify the corresponding output, so use unique input names.
+
+
+### Call endpoint with single local file
+
+```
+az ml endpoint invoke --name rosettafold --type batch –input-local-path <local/path/to>/input.fa
+```
+
+### Call endpoint with single remote file
+
+Given a single input file stored in Azure Blob Storage, grab the corresponding URL: `https://<storage-account-name>.blob.core.windows.net/<storage-container>/<path/on/container>/input.fa`, invoke the endpoint with:
+
+```
+az ml endpoint invoke --name rosettafold --type batch --input-path https://<storage-account-name>.blob.core.windows.net/<storage-container>/<path/on/container>/input.fa
+```
+
+### Call the endpoint with multiple files
+
+Run this exactly as above, only now pointing to a directory containing multiple files e.g.
+
+```
+az ml endpoint invoke --name rosettafold --type batch --input-path https://<storage-account-name>.blob.core.windows.net/<storage-container>/<path/on/container>/
+```
+
+### Reading output
+
+When the inferencing job is complete, output files will be uploaded to the workspace default Azure Blob Storage account with the following location:
+
+```
+https://<default-storage-account>.blob.core.windows.net/<default-container>/azureml/<run-id>/score/<input-filename>/t000.e2e.pdb
+```
+
+## Configuring Parallelism
+
+When setting up the endpoint we configured the instance count, and the minibatch size parameters. These control the how the inference jobs will scale up.
+
+- Instance count: the maximum number of nodes (VMs) that will spin up.
+- Minibatch size: the maximum number of examples that will be processed at a time per-node.
+A minibatch is sent to each instance, where it will be processed sequentially. Once that node completes its minibatch it will be sent another (assuming there are any remaining inputs to be processed).
+
+## REST Endpoint
+
+Batch endpoints can also be invoked via a REST endpoint as follows. Here is an example.
+
+1.	Get batch endpoint scoring uri:
+```
+scoring_uri=$(az ml endpoint show --name rosettafold --type batch --query scoring_uri -o tsv)
+```
+
+2.	Get authentication token:
+```
+auth_token=$(az account get-access-token --query accessToken -o tsv)
+```
+
+3.	Kick off inferencing job via CURL:
+
+```
+curl --location --request POST "$scoring_uri" --header "Authorization: Bearer $auth_token" --header "Content-Type: application/json" --data-raw "{'properties': {'dataset': {'dataInputType': 'DataUrl', 'Path': 'https://amsaiedws3295876841.blob.core.windows.net/azureml-blobstore-febe82a7-da37-4f81-85d5-48c8a0082e47/rosetta/input_samples/inputs.fa'}}}"
+```
+
 
 ## Example
 
-To run the Rosetta Fold model:
-
-```
-az ml endpoint invoke --name rosettafold --type batch --input-local-path ./inputs.fa
-```
+We provide concrete example of an input/output pair by way of example.
 
 ### Example Input
 
