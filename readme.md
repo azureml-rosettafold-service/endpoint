@@ -24,7 +24,15 @@ To setup the RosettaFold endpoint run the following:
 ```bash
 az ml compute create --name gpu-cluster --type AMLCompute --size Standard_NC12 --min-instances 0 --max-instances 10
 ```
-3. Create the endpoint
+
+3. The endpoint assumes the databases required for RoseTTAFold are available via registered datasets in the workspace.
+   The data is available in a [public blob storage](https://ms.portal.azure.com/#blade/Microsoft_Azure_Storage/ContainerMenuBlade/overview/storageAccountId/%2Fsubscriptions%2F48bbc269-ce89-4f6f-9a12-c6f91fcb772d%2FresourceGroups%2Faml1p-rg%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Frosettafold/path/rosettafold-dependencies%2Fdbs%2FUniRef%2F), under these paths:
+   - rosettafold_weights :"weights/"
+   - rosettafold_bfd :"dbs/bfd/bfd/"
+   - rosettafold_UniRef:"dbs/UniRef/"
+   - rosettafold_pdb:"dbs/pdb/"
+    
+4. Create the endpoint
 
 ```
 az ml endpoint create --type batch --file create-batch-endpoint.yml
