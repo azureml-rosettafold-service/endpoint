@@ -111,7 +111,7 @@ curl --location --request POST "$scoring_uri" --header "Authorization: Bearer $a
 
 ## Example
 
-We provide concrete example of an input/output pair by way of example.
+We provide concrete example of an input/output pair.
 
 ### Example Input
 
