@@ -119,7 +119,7 @@ def run(mini_batch):
         output_dir = os.path.join(output_root, input_filename)
         os.makedirs(output_dir, exist_ok=True)
         print(f"Moving outputs to {output_dir}")
-        OUTPUT_FILENAME = "t000.e2e.pdb"  # filename is hard-coded in Rosetta Fold code
+        OUTPUT_FILENAME = "t000_.e2e.pdb"  # filename is hard-coded in Rosetta Fold code
         if OUTPUT_FILENAME in os.listdir(temp_wd):
             shutil.copy(
                 os.path.join(temp_wd, OUTPUT_FILENAME),
