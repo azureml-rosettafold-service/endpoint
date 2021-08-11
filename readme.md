@@ -99,7 +99,7 @@ scoring_uri=$(az ml endpoint show --name rosettafold --type batch --query scorin
 
 2.	Get authentication token:
 ```
-auth_token=$(az account get-access-token --query accessToken -o tsv)
+auth_token=$(az account get-access-token --resource https://ml.azure.com --query accessToken -o tsv)
 ```
 
 3.	Kick off inferencing job via CURL:
