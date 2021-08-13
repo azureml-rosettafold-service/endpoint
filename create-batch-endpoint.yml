@@ -25,3 +25,10 @@ deployments:
       docker:
         build:
           dockerfile: file:./dockerfile
+    mini_batch_size: 1
+    output_file_name: batchoutput.txt
+    retry_settings:
+      max_retries: 3
+      timeout: 4000
+    error_threshold: -1 
+    logging_level: info
