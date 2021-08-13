@@ -8,10 +8,7 @@ traffic:
 
 deployments:
   - name: deployment
-    model:
-      name: placeholdermodel
-      version: 1
-      local_path: ./model_placeholder.txt
+    model: azureml:placeholdermodel:1
     code_configuration:
       code:
         local_path: .
@@ -19,12 +16,7 @@ deployments:
     compute:
       target: azureml:gpu-cluster
       instance_count: 1
-    environment:
-      name: rosetta-local
-      version: 1
-      docker:
-        build:
-          dockerfile: file:./dockerfile
+    environment: azureml:rosetta-local:1
     mini_batch_size: 1
     output_file_name: batchoutput.txt
     retry_settings:
