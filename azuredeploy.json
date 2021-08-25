@@ -82,10 +82,6 @@
         "gpuClusterMaxNodeCount": {
             "type": "int",
             "defaultValue": 10
-        },
-        "rosettafoldWeightsDatasetName": {
-            "type": "string",
-            "defaultValue": "rosettafold_weights"
         }
     },
     "variables": {
@@ -217,12 +213,39 @@
             ]
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/', parameters('rosettafoldWeightsDatasetName'), '/1')]",
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_weights/3')]",
             "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
             "apiVersion": "2021-03-01-preview",
             "properties": {
                 "description": "TODO: say something.",
                 "path": "https://rosettafold.blob.core.windows.net/rosettafold-dependencies/weights/**"
+            }
+        },
+        {
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_bfd/2')]",
+            "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
+            "apiVersion": "2021-03-01-preview",
+            "properties": {
+                "description": "TODO: say something.",
+                "path": "https://rosettafold.blob.core.windows.net/rosettafold-dependencies/dbs/bfd/bfd/**"
+            }
+        },
+        {
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_UniRef/2')]",
+            "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
+            "apiVersion": "2021-03-01-preview",
+            "properties": {
+                "description": "TODO: say something.",
+                "path": "https://rosettafold.blob.core.windows.net/rosettafold-dependencies/dbs/UniRef/**"
+            }
+        },
+        {
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_pdb/2')]",
+            "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
+            "apiVersion": "2021-03-01-preview",
+            "properties": {
+                "description": "TODO: say something.",
+                "path": "https://rosettafold.blob.core.windows.net/rosettafold-dependencies/dbs/pdb/**"
             }
         }
     ]
