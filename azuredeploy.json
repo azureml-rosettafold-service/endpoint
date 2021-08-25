@@ -82,6 +82,10 @@
         "gpuClusterMaxNodeCount": {
             "type": "int",
             "defaultValue": 10
+        },
+        "rosettafoldWeightsDatasetName": {
+            "type": "string",
+            "defaultValue": "rosettafold_weights"
         }
     },
     "variables": {
@@ -211,6 +215,15 @@
             "dependsOn": [
                 "[variables('workspace')]"
             ]
+        },
+        {
+            "name": "[concat(parameters('workspaceName'), '/', parameters('rosettafoldWeightsDatasetName'), '/1')]",
+            "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
+            "apiVersion": "2021-03-01-preview",
+            "properties": {
+                "description": "TODO: say something.",
+                "path": "https://rosettafold.blob.core.windows.net/rosettafold-dependencies/weights/**"
+            }
         }
     ]
 }
