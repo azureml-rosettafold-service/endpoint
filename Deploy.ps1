@@ -1,6 +1,6 @@
 param(
     $Subscription = "48bbc269-ce89-4f6f-9a12-c6f91fcb772d",
-    $ResourceGroup = "rosettafold2-rg",
+    $ResourceGroup = "rosettafold3-rg",
     $Location = "eastus2"
 )
 az account set --subscription $Subscription

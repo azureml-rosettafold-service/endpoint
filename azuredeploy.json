@@ -74,18 +74,14 @@
         },
         "gpuVmSize": {
             "type": "string",
-            "defaultValue": "STANDARD_NC6",
+            "defaultValue": "Standard_NC12",
             "metadata": {
                 "description": "SKU of nodes in provisioned GPU cluster"
             }
         },
         "gpuClusterMaxNodeCount": {
             "type": "int",
-            "defaultValue": 2
-        },
-        "datastoreName": {
-            "type": "string",
-            "defaultValue": "rosettafold"
+            "defaultValue": 10
         }
     },
     "variables": {
@@ -93,8 +89,7 @@
         "storageAccount": "[resourceId(resourceGroup().name, 'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
         "keyVault": "[resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
         "applicationInsights": "[resourceId(resourceGroup().name, 'Microsoft.Insights/components', parameters('applicationInsightsName'))]",
-        "workspace": "[resourceId('Microsoft.MachineLearningServices/workspaces/', parameters('workspaceName'))]",
-        "datastore": "[resourceId('Microsoft.MachineLearningServices/workspaces/datastores', parameters('workspaceName'), parameters('datastoreName'))]"
+        "workspace": "[resourceId('Microsoft.MachineLearningServices/workspaces/', parameters('workspaceName'))]"
     },
     "resources": [
         {
@@ -191,32 +186,6 @@
             ]
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/', parameters('datastoreName'))]",
-            "type": "Microsoft.MachineLearningServices/workspaces/datastores",
-            "apiVersion": "2021-03-01-preview",
-            "properties": {
-                "contents": {
-                    "accountName": "rosettafold",
-                    "containerName": "rosettafold-dependencies",
-                    "contentsType": "AzureBlob",
-                    "credentials": {
-                        "credentialsType": "Sas",
-                        "secrets": {
-                            "sasToken": "sp=r&st=2021-08-03T18:55:01Z&se=3022-08-04T02:55:01Z&spr=https&sv=2020-08-04&sr=c&sig=2m%2FvkSJjW%2F860lszlsyJ6iifuv3Uw%2FSLa7Keao443VQ%3D",
-                            "secretsType": "Sas"
-                        }
-                    },
-                    "endpoint": "rosettafold.blob.core.windows.net",
-                    "protocol": "https"
-                },
-                "description": "TODO: say something",
-                "isDefault": false
-            },
-            "dependsOn": [
-                "[variables('workspace')]"
-            ]
-        },
-        {
             "name": "[concat(parameters('workspaceName'), '/rosettafold')]",
             "type": "Microsoft.MachineLearningServices/workspaces/batchEndpoints",
             "apiVersion": "2021-03-01-preview",
@@ -241,19 +210,6 @@
             },
             "dependsOn": [
                 "[variables('workspace')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('workspaceName'), '/rosettafold/2')]",
-            "type": "Microsoft.MachineLearningServices/workspaces/models/versions",
-            "apiVersion": "2021-03-01-preview",
-            "properties": {
-                "datastoreId": "[variables('datastore')]",
-                "path": "sample_inputs",
-                "description": "TODO: something."
-            },
-            "dependsOn": [
-                "[variables('datastore')]"
             ]
         }
     ]
