@@ -82,6 +82,10 @@
         "gpuClusterMaxNodeCount": {
             "type": "int",
             "defaultValue": 10
+        },
+        "datasetVersion": {
+            "type": "int",
+            "defaultValue": 1
         }
     },
     "variables": {
@@ -213,7 +217,7 @@
             ]
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/rosettafold_weights/3')]",
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_weights/', parameters('datasetVersion'))]",
             "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
             "apiVersion": "2021-03-01-preview",
             "properties": {
@@ -222,7 +226,7 @@
             }
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/rosettafold_bfd/2')]",
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_bfd/', parameters('datasetVersion'))]",
             "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
             "apiVersion": "2021-03-01-preview",
             "properties": {
@@ -231,7 +235,7 @@
             }
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/rosettafold_UniRef/2')]",
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_UniRef/', parameters('datasetVersion'))]",
             "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
             "apiVersion": "2021-03-01-preview",
             "properties": {
@@ -240,7 +244,7 @@
             }
         },
         {
-            "name": "[concat(parameters('workspaceName'), '/rosettafold_pdb/2')]",
+            "name": "[concat(parameters('workspaceName'), '/rosettafold_pdb/', parameters('datasetVersion'))]",
             "type": "Microsoft.MachineLearningServices/workspaces/data/versions",
             "apiVersion": "2021-03-01-preview",
             "properties": {

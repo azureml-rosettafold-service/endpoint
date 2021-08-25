@@ -7,6 +7,9 @@
         },
         "location": {
             "value": "eastus2"
+        },
+        "datasetVersion": {
+            "value": 4
         }
     }
 }
